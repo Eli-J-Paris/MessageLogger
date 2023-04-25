@@ -1,10 +1,9 @@
 ﻿using MessageLogger;
-
 List<User> allUsers = new List<User>();
-List<Message> allMessages = new List<Message>();
 
 
 Console.WriteLine("---Welcome to Chirp---");
+//DRY1
 User currentUser = CreateUser();
 allUsers.Add(currentUser);
 
@@ -23,16 +22,19 @@ while (userInput != "quit")
         while (needInput)
         {
             Console.Clear();
-            Console.WriteLine("would you like to login to a new or exsisting account");
+            Console.WriteLine("would you like to login into a new or existing account");
             string login = Console.ReadLine();
             if (login == "new")
             {
+                //DRY1
                 currentUser = CreateUser();
                 allUsers.Add(currentUser);
+               
+
                 Intro();
                 needInput = false;
             }
-            else if (login == "exsisting")
+            else if (login == "existing")
             {
                 currentUser = LogInExsisting(allUsers, currentUser);
                 WriteAllUserMessages(currentUser);
@@ -50,15 +52,16 @@ while (userInput != "quit")
     else
     {
         Message newMessage = new Message(userInput);
-        allMessages.Add(newMessage);
         currentUser.addMessage(newMessage);
-        //WriteMessageToConsole(allMessages);
         Console.WriteLine();
         WriteAllUserMessages(currentUser);
     }
      
 }
-totalMessages(allUsers);
+MessageManager messageManager = new MessageManager(allUsers);
+
+List<string> allUserMessages = messageManager.AllMessages();
+totalMessages(allUsers, allUserMessages);
 
 
 //End of program
@@ -89,7 +92,7 @@ static User CreateUser()
 
 
 //Display total message count for each user
-static void totalMessages(List<User> allUsers)
+static void totalMessages(List<User> allUsers, List<string> allUserMessages)
 {
     foreach(var user in allUsers)
     {
@@ -132,15 +135,3 @@ static void WriteMessageToConsole(List<Message> messages)
     }
 }
 
-
-
-//Console.Write("what is your Username?");
-//string userName = Console.ReadLine();
-//foreach (var name in allUsers)
-//{
-//    if (name.UserName.Contains(userName))
-//    {
-//        currentUser = name;
-//    }
-
-//}
