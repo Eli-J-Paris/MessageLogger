@@ -11,28 +11,12 @@ namespace MessageLogger
     {
         public string Content;
         public DateTime CreatedAt;
-        public Dictionary<string,string> AllMessages;
-        public Message()
-        {
-            Content = string.Empty;
-            AllMessages = new Dictionary<string, string>();
-
-        }
-
-        public void StoreMessage(string content)
+        
+        public Message(string content)
         {
             Content = content;
             CreatedAt = DateTime.Now;
-            
-            AllMessages.Add(CreatedAt.ToLongTimeString(),content);
         }
 
-        public void PrintMessages()
-        {
-            foreach(var message in AllMessages)
-            {
-                Console.WriteLine($"{message.Key} {message.Value}");
-            }
-        }
     }
 }

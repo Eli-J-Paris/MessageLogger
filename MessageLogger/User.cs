@@ -17,11 +17,12 @@ namespace MessageLogger
         {
             Name = name;
             UserName = userName;
+            UserMessages = new List<Message>();
         }
 
-        public void newMessage(Message message)
+        public void addMessage(Message message)
         {
-
+            UserMessages.Add(message);
         }
 
     }
