@@ -9,14 +9,17 @@ User currentUser = CreateUser(allUsers);
 allUsers.Add(currentUser);
 
 Intro();
-
+string login = string.Empty;
 string userInput = string.Empty;
 while (userInput != "quit")
 {
     Console.Write("Add a Message: ");
     userInput = Console.ReadLine();
 
-
+    if (userInput == "quit")
+    {
+        break;
+    }
     if (userInput == "log out" || userInput == "logout")
     {
         bool needInput = true;
@@ -24,7 +27,7 @@ while (userInput != "quit")
         {
             Console.Clear();
             Console.WriteLine("would you like to login into a new or existing account");
-            string login = Console.ReadLine();
+            login = Console.ReadLine();
             if (login == "new")
             {
                 //DRY1
@@ -37,18 +40,20 @@ while (userInput != "quit")
             }
             else if (login == "existing")
             {
-                currentUser = LogInExsisting(allUsers, currentUser);
+                currentUser = LogInExisting(allUsers, currentUser);
                 WriteAllUserMessages(currentUser);
+                needInput = false;
+
+            }
+            else if(login == "quit")
+            {
+                userInput = "quit";
                 needInput = false;
 
             }
 
         }
 
-    }
-    else if(userInput == "quit")
-    {
-        break;
     }
     else
     {
@@ -57,6 +62,8 @@ while (userInput != "quit")
         Console.WriteLine();
         WriteAllUserMessages(currentUser);
     }
+
+
      
 }
 Loading();
@@ -85,13 +92,27 @@ while (backEndExploration)
     }
     else if (data == 3)
     {
+        bool exist;
         Console.Clear();
-        currentUser = LogInExsisting(allUsers, currentUser);
-        Console.WriteLine("How many messages do you want returned?");
-        int num = Convert.ToInt32(Console.ReadLine());
+        (exist, currentUser) = ValidateUserExists(allUsers, currentUser);
+        if(exist == true)
+        {
+            //currentUser = LogInExisting(allUsers, currentUser);
 
-        messageManager.returnUsersRecentMessages(currentUser, num);
-        BackButton();
+            Console.WriteLine("How many messages do you want returned?");
+            int num = Convert.ToInt32(Console.ReadLine());
+
+            messageManager.WriteUsersRecentMessages(currentUser, num);
+            BackButton();
+        }
+        else
+        {
+            Console.WriteLine("USERNAME NOT FOUND");
+            BackButton();
+
+        }
+
+
 
     }
     else if (data == 4)
@@ -105,35 +126,13 @@ while (backEndExploration)
 
 
 
-//writeAllMessages(allUserMessages);
 
 
 
-
-
-
-
-
-
-
-//static void writeAllMessages(List<string> allUserMessages)
-//{
-//    Console.WriteLine("Messages across all acounts");
-//    foreach(string message in allUserMessages)
-//    {
-//        Console.WriteLine(message);
-//    }
-//}
-//totalMessages(allUsers, allUserMessages);
-
-
-
-
-
-
-//THIS SHOULD GO IN THE USER CLASS!!!! ! ! !
+//THIS COULD GO IN THE USER CLASS!!!! ! ! !
 static void WriteAllUserMessages(User user)
 {
+    
     foreach(var message in user.UserMessages)
     {
         Console.WriteLine($"{user.UserName} {message.CreatedAt.ToString("hh:mm tt")} {message.Content}");
@@ -161,7 +160,7 @@ static User CreateUser(List<User> allUsers)
 
 
 //log into an exsisting account
-static User LogInExsisting(List<User> allUsers, User currentUser)
+static User LogInExisting(List<User> allUsers, User currentUser)
 {
     Console.Write("Enter in a Username?");
     string userName = Console.ReadLine();
@@ -170,16 +169,22 @@ static User LogInExsisting(List<User> allUsers, User currentUser)
         if (name.UserName.Contains(userName))
         {
             currentUser = name;
-            break;
+            return currentUser;
         }
-        else
+       
+    }
+    foreach(var name in allUsers)
+    {
+        if (!name.UserName.Contains(userName))
         {
-            Console.WriteLine("UserName Not Found, Lets Create a new user");
+            Console.WriteLine("Username Not Found, Lets Create a new user");
             currentUser = CreateUser(allUsers);
-            break;
-            //return currentUser;
+            allUsers.Add(currentUser);
+
+            return currentUser;
         }
     }
+  
     return currentUser;
 }
 
@@ -191,14 +196,6 @@ static void Intro()
     Console.WriteLine("To log out of your user profile, enter 'log out'. TO quit the applcation enter 'quit'.");
 }
 
-//Might need later???
-static void WriteMessageToConsole(List<Message> messages)
-{
-    foreach (var message in messages)
-    {
-        Console.WriteLine($"{message.CreatedAt.ToString("hh:mm tt")} {message.Content}");
-    }
-}
 
 static void Loading()
 {
@@ -233,7 +230,33 @@ static void ListOptions()
 
 static void BackButton()
 {
-    Console.Write("\n\n\n\n\n\n PRESS ANY KEY TO GO BACK");
+    Console.Write("\n\n\n\n\n\nPRESS ANY KEY TO GO BACK");
     Console.ReadLine();
     Console.Clear();
+}
+
+static (bool, User) ValidateUserExists(List<User> allUsers, User currentUser)
+{
+    
+    Console.Write("Enter in a Username?");
+    string userName = Console.ReadLine();
+    foreach (var name in allUsers)
+    {
+        if (name.UserName.Contains(userName))
+        {
+            currentUser = name;
+            return (true,currentUser); 
+        }
+
+    }
+    foreach (var name in allUsers)
+    {
+        if (!name.UserName.Contains(userName))
+        {
+            return (false, currentUser);
+        }
+    }
+
+    return (true, currentUser);
+
 }
