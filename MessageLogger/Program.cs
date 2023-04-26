@@ -1,10 +1,11 @@
 ﻿using MessageLogger;
-List<User> allUsers = new List<User>();
+ List<User> allUsers = new List<User>();
+MessageManager messageManager = new MessageManager(allUsers);
 
 
 Console.WriteLine("---Welcome to Chirp---");
 //DRY1
-User currentUser = CreateUser();
+User currentUser = CreateUser(allUsers);
 allUsers.Add(currentUser);
 
 Intro();
@@ -27,7 +28,7 @@ while (userInput != "quit")
             if (login == "new")
             {
                 //DRY1
-                currentUser = CreateUser();
+                currentUser = CreateUser(allUsers);
                 allUsers.Add(currentUser);
                
 
@@ -58,15 +59,79 @@ while (userInput != "quit")
     }
      
 }
-MessageManager messageManager = new MessageManager(allUsers);
+Loading();
 
-List<string> allUserMessages = messageManager.AllMessages();
-totalMessages(allUsers, allUserMessages);
+//End of Main program
+
+//Start of DataBase
+
+bool backEndExploration = true;
+while (backEndExploration)
+{
+    ListOptions();
+    int data = Convert.ToInt32(Console.ReadLine());
+    if (data == 1)
+    {
+        Console.Clear();
+        messageManager.AllMessages();
+        BackButton();
+    }
+    else if (data == 2)
+    {
+        Console.Clear();
+        messageManager.totalMessages();
+        BackButton();
+
+    }
+    else if (data == 3)
+    {
+        Console.Clear();
+        currentUser = LogInExsisting(allUsers, currentUser);
+        Console.WriteLine("How many messages do you want returned?");
+        int num = Convert.ToInt32(Console.ReadLine());
+
+        messageManager.returnUsersRecentMessages(currentUser, num);
+        BackButton();
+
+    }
+    else if (data == 4)
+    {
+        break;
+    }
+
+}
 
 
-//End of program
 
-//display all of the users messages
+
+
+//writeAllMessages(allUserMessages);
+
+
+
+
+
+
+
+
+
+
+//static void writeAllMessages(List<string> allUserMessages)
+//{
+//    Console.WriteLine("Messages across all acounts");
+//    foreach(string message in allUserMessages)
+//    {
+//        Console.WriteLine(message);
+//    }
+//}
+//totalMessages(allUsers, allUserMessages);
+
+
+
+
+
+
+//THIS SHOULD GO IN THE USER CLASS!!!! ! ! !
 static void WriteAllUserMessages(User user)
 {
     foreach(var message in user.UserMessages)
@@ -79,7 +144,7 @@ static void WriteAllUserMessages(User user)
 
 
 //create a new user
-static User CreateUser()
+static User CreateUser(List<User> allUsers)
 {
     Console.WriteLine("Lets create a user profile for you.");
     Console.Write("what is your name:");
@@ -87,25 +152,18 @@ static User CreateUser()
     Console.Write("what is your username:");
     string createUserName = Console.ReadLine();
     User newUser = new User(createUser, createUserName);
+   // allUsers.Add(newUser);
     return newUser;
 }
 
 
-//Display total message count for each user
-static void totalMessages(List<User> allUsers, List<string> allUserMessages)
-{
-    foreach(var user in allUsers)
-    {
-        Console.WriteLine($"{user.Name} wrote {user.UserMessages.Count} messages");
-    }
-}
 
 
 
 //log into an exsisting account
 static User LogInExsisting(List<User> allUsers, User currentUser)
 {
-    Console.Write("what is your Username?");
+    Console.Write("Enter in a Username?");
     string userName = Console.ReadLine();
     foreach (var name in allUsers)
     {
@@ -113,6 +171,13 @@ static User LogInExsisting(List<User> allUsers, User currentUser)
         {
             currentUser = name;
             break;
+        }
+        else
+        {
+            Console.WriteLine("UserName Not Found, Lets Create a new user");
+            currentUser = CreateUser(allUsers);
+            break;
+            //return currentUser;
         }
     }
     return currentUser;
@@ -135,3 +200,40 @@ static void WriteMessageToConsole(List<Message> messages)
     }
 }
 
+static void Loading()
+{
+    for (int i = 0; i < 2; i++)
+    {
+        Console.Clear();
+        Console.WriteLine("Loading Data");
+        Thread.Sleep(500);
+        Console.Clear();
+        Console.WriteLine("Loading Data.");
+        Thread.Sleep(500);
+        Console.Clear();
+        Console.WriteLine("Loading Data. .");
+        Thread.Sleep(500);
+        Console.Clear();
+        Console.WriteLine("Loading Data. . .");
+        Thread.Sleep(500);
+        Console.Clear();
+
+    }
+}
+
+
+static void ListOptions()
+{
+    Console.WriteLine("--PROGRAM DATA--\n");
+    Console.WriteLine("1: MESSAGE DATA BASE\n \n \n");
+    Console.WriteLine("2: TOTAL MESSAGE COUNT\n \n \n");
+    Console.WriteLine("3: RETURN A USERS RECENT MESSAGES\n \n \n");
+    Console.WriteLine("4: END");    
+}
+
+static void BackButton()
+{
+    Console.Write("\n\n\n\n\n\n PRESS ANY KEY TO GO BACK");
+    Console.ReadLine();
+    Console.Clear();
+}

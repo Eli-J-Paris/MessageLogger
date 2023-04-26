@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MessageLogger;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,18 +17,44 @@ namespace MessageLogger
         }
 
 
-        public List<string> AllMessages()
+        public void AllMessages()
         {
             List<string> allUserMessages = new List<string>();
             foreach(var user in Users)
             {
                 foreach(var message in user.UserMessages)
                 {
-                    allUserMessages.Add(message.Content);
+                    Console.WriteLine($"{user.UserName} {message.CreatedAt.ToString("hh:mm tt")} wrote: {message.Content}");
                 }
             }
+        }
 
-            return allUserMessages;
+       public void WriteAllMessagesForAUser(User user)
+        {
+            foreach (var message in user.UserMessages)
+            {
+                Console.WriteLine($"{user.UserName} {message.CreatedAt.ToString("hh:mm tt")} {message.Content}");
+            }
+        }
+
+
+        public void totalMessages()
+        {
+            foreach (var user in Users)
+            {
+                Console.WriteLine($"{user.Name} wrote {user.UserMessages.Count} messages");
+            }
+        }
+
+        public void returnUsersRecentMessages(User user, int num)
+        {
+            user.UserMessages.Reverse();
+
+            for (int i = 0; i < num; i++)
+            {
+                Console.WriteLine($"{user.UserMessages[i].CreatedAt} {user.UserMessages[i].Content}");
+            }
+ 
         }
     }
 
