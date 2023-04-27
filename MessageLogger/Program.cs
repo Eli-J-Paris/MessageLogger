@@ -26,7 +26,7 @@ while (userInput != "quit")
         while (needInput)
         {
             Console.Clear();
-            Console.WriteLine("would you like to login into a new or existing account");
+            Console.WriteLine("Would you like to login into a new or existing account?");
             login = Console.ReadLine();
             if (login == "new")
             {
@@ -119,6 +119,10 @@ while (backEndExploration)
     {
         break;
     }
+    else if(data == 5)
+    {
+        EasterEgg();
+    }
 
 }
 
@@ -145,10 +149,10 @@ static void WriteAllUserMessages(User user)
 //create a new user
 static User CreateUser(List<User> allUsers)
 {
-    Console.WriteLine("Lets create a user profile for you.");
-    Console.Write("what is your name:");
+    Console.WriteLine("Let's create a user profile for you.");
+    Console.Write("What is your name?:");
     string createUser = Console.ReadLine();
-    Console.Write("what is your username:");
+    Console.Write("What is your username?:");
     string createUserName = Console.ReadLine();
     User newUser = new User(createUser, createUserName);
    // allUsers.Add(newUser);
@@ -177,7 +181,7 @@ static User LogInExisting(List<User> allUsers, User currentUser)
     {
         if (!name.UserName.Contains(userName))
         {
-            Console.WriteLine("Username Not Found, Lets Create a new user");
+            Console.WriteLine("Username Not Found, Let's create a new user");
             currentUser = CreateUser(allUsers);
             allUsers.Add(currentUser);
 
@@ -193,7 +197,7 @@ static User LogInExisting(List<User> allUsers, User currentUser)
 //intro
 static void Intro()
 {
-    Console.WriteLine("To log out of your user profile, enter 'log out'. TO quit the applcation enter 'quit'.");
+    Console.WriteLine("To log out of your user profile, enter 'log out'. To quit the applcation enter 'quit'.");
 }
 
 
@@ -224,13 +228,13 @@ static void ListOptions()
     Console.WriteLine("--PROGRAM DATA--\n");
     Console.WriteLine("1: MESSAGE DATA BASE\n \n \n");
     Console.WriteLine("2: TOTAL MESSAGE COUNT\n \n \n");
-    Console.WriteLine("3: RETURN A USERS RECENT MESSAGES\n \n \n");
+    Console.WriteLine("3: RETURN A USER'S RECENT MESSAGES\n \n \n");
     Console.WriteLine("4: END");    
 }
 
 static void BackButton()
 {
-    Console.Write("\n\n\n\n\n\nPRESS ANY KEY TO GO BACK");
+    Console.Write("\n\n\n\n\n\nPRESS ENTER TO GO BACK");
     Console.ReadLine();
     Console.Clear();
 }
@@ -259,4 +263,17 @@ static (bool, User) ValidateUserExists(List<User> allUsers, User currentUser)
 
     return (true, currentUser);
 
+}
+
+
+static void EasterEgg()
+{
+    string binary = "01001000 01100001 01110110 01100101 00100000 01100001 00100000 01110111 01101111 01101110 01100100 01100101 01110010 01100110 01110101 01101100 00100000 01100100 01100001 01111001 00100001 00001010";
+    foreach (char c in binary)
+    {
+        Console.Write(c);
+        Thread.Sleep(10);
+    }
+    Console.ReadLine();
+    Console.Clear();
 }
